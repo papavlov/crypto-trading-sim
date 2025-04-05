@@ -15,30 +15,34 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // RowMapper to map DB result to User object
+    //RowMapper to map DB result to User object
     private final RowMapper<User> userRowMapper = (rs, rowNum) -> new User(
             rs.getInt("id"),
             rs.getString("username"),
             rs.getDouble("balance")
     );
 
-    // Get all users
+    //Get all users
     public List<User> getAllUsers() {
         return jdbcTemplate.query("SELECT * FROM users", userRowMapper);
     }
 
-    // Get user by ID
+    //get user by ID
     public User getUserById(int id) {
         return jdbcTemplate.queryForObject("SELECT * FROM users WHERE id = ?", userRowMapper, id);
     }
 
-    // Insert new user
+    //add new user
     public void createUser(String username, double balance) {
         jdbcTemplate.update("INSERT INTO users (username, balance) VALUES (?, ?)", username, balance);
     }
 
-    // Update balance
+    //update balance
     public void updateBalance(int userId, double newBalance) {
         jdbcTemplate.update("UPDATE users SET balance = ? WHERE id = ?", newBalance, userId);
+    }
+
+    public void resetBalance(int userId, double initialBalance) {
+        jdbcTemplate.update("UPDATE users SET balance = ? WHERE id = ?", initialBalance, userId);
     }
 }
