@@ -19,6 +19,8 @@ public class KrakenWebSocketClient extends WebSocketClient {
 
     private static final String KRAKEN_WS_URL = "wss://ws.kraken.com/v2";
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    //key = "BTC", "ETH"...
     private static final Map<String, CryptoPrice> prices = new ConcurrentHashMap<>();
 
     public KrakenWebSocketClient() throws Exception {
@@ -45,7 +47,6 @@ public class KrakenWebSocketClient extends WebSocketClient {
                     )
             ));
 
-            //test prints
             System.out.println("Subscribing to pairs: " + Arrays.toString(pairs));
             System.out.println("Subscription message: " + subscribeMessage);
 
@@ -60,21 +61,17 @@ public class KrakenWebSocketClient extends WebSocketClient {
         try {
             JsonNode jsonNode = objectMapper.readTree(message);
 
-            //check if the message is related to ticker
             if ("ticker".equals(jsonNode.get("channel").asText()) && jsonNode.has("data")) {
                 for (JsonNode dataNode : jsonNode.get("data")) {
-                    String pair = dataNode.get("symbol").asText();
-                    double lastPrice = dataNode.get("last").asDouble(); // Last trade price
-                    double bidPrice = dataNode.get("bid").asDouble();   // Bid price
-                    double askPrice = dataNode.get("ask").asDouble();   // Ask price
+                    String krakenSymbol = dataNode.get("symbol").asText(); //like "XBT/USD"
+                    double lastPrice = dataNode.get("last").asDouble();
 
-                    String name = KrakenPairs.PAIRS.getOrDefault(pair, pair);
-                    String displaySymbol = pair.replace("/USD", "");
+                    //Convert Kraken pair like "XBT/USD" to "BTC"
+                    String displaySymbol = krakenSymbol.replace("/USD", "").replace("XBT", "BTC");
+                    String name = KrakenPairs.PAIRS.getOrDefault(krakenSymbol, krakenSymbol);
 
-                    //update prices map with the latest data
-                    prices.put(pair, new CryptoPrice(displaySymbol, name, lastPrice));
+                    prices.put(displaySymbol, new CryptoPrice(displaySymbol, name, lastPrice));
 
-                    //price log for test prints
                     System.out.println("Updated price for " + displaySymbol + ": " + lastPrice);
                 }
             }
@@ -82,7 +79,7 @@ public class KrakenWebSocketClient extends WebSocketClient {
             e.printStackTrace();
         }
 
-        //test prints
+        //test print
         System.out.println("Incoming message from Kraken: " + message);
     }
 
@@ -99,5 +96,10 @@ public class KrakenWebSocketClient extends WebSocketClient {
     public Map<String, CryptoPrice> getPrices() {
         return prices;
     }
-}
 
+    //method to get the latest price by symbol (BTC, ETH, etc.)
+    public Double getLatestPrice(String symbol) {
+        CryptoPrice price = prices.get(symbol.toUpperCase());
+        return price != null ? price.getPrice() : null;
+    }
+}
