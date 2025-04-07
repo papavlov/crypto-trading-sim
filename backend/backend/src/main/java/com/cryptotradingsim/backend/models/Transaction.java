@@ -1,5 +1,6 @@
 package com.cryptotradingsim.backend.models;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class Transaction {
@@ -13,11 +14,12 @@ public class Transaction {
     private double total;
     private String type;  // "BUY" or "SELL"
     private Timestamp timestamp;
+    private BigDecimal profitLoss;
 
     // Constructors
     public Transaction() {}
 
-    public Transaction(int id, int userId, String cryptoName, String symbol, double price, double quantity, double total, String type, Timestamp timestamp) {
+    public Transaction(int id, int userId, String cryptoName, String symbol, double price, double quantity, double total, String type, Timestamp timestamp, BigDecimal profitLoss) {
         this.id = id;
         this.userId = userId;
         this.cryptoName = cryptoName;
@@ -27,6 +29,7 @@ public class Transaction {
         this.total = total;
         this.type = type;
         this.timestamp = timestamp;
+        this.profitLoss = profitLoss;
     }
 
     // Getters & Setters
@@ -56,4 +59,12 @@ public class Transaction {
 
     public Timestamp getTimestamp() { return timestamp; }
     public void setTimestamp(Timestamp timestamp) { this.timestamp = timestamp; }
+
+    public BigDecimal getProfitLoss() {
+        return profitLoss;
+    }
+
+    public void setProfitLoss(BigDecimal profitLoss) {
+        this.profitLoss = profitLoss;
+    }
 }

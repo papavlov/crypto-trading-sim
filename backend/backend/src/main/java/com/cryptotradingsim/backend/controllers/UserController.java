@@ -21,28 +21,22 @@ public class UserController {
         this.krakenWebSocketClient = krakenWebSocketClient;
     }
 
-    // Create a new user
+    //Create a new user
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestParam String username) {
         userService.createUser(username);
         return ResponseEntity.ok("User created with initial balance.");
     }
 
-    // Get user by ID
+    //Get user by ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable int id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
-    // Reset account balance
-    @PostMapping("/{id}/reset")
-    public ResponseEntity<String> resetBalance(@PathVariable int id) {
-        userService.resetBalance(id);
-        return ResponseEntity.ok("Balance reset to initial value.");
-    }
 
-    // Buy crypto using live Kraken price
+    //Buy crypto using live Kraken price
     @PostMapping("/{id}/buy")
     public ResponseEntity<String> buyCrypto(
             @PathVariable int id,
@@ -67,7 +61,7 @@ public class UserController {
         return ResponseEntity.ok("Purchase successful at price: $" + livePrice);
     }
 
-    // Sell crypto using live Kraken price
+    //sell crypto using live Kraken price
     @PostMapping("/{id}/sell")
     public ResponseEntity<String> sellCrypto(
             @PathVariable int id,
@@ -87,4 +81,12 @@ public class UserController {
         transactionService.addTransaction(id, cryptoName, symbol, quantity, "SELL");
         return ResponseEntity.ok("Sell successful at price: $" + livePrice);
     }
+    //reset account balance and clear all user transactions
+    @PostMapping("/{id}/reset")
+    public ResponseEntity<String> resetBalance(@PathVariable int id) {
+        userService.resetBalance(id);
+        transactionService.clearTransactionsForUser(id);  //
+        return ResponseEntity.ok("Account reset: balance set to initial value and all transactions cleared.");
+    }
+
 }

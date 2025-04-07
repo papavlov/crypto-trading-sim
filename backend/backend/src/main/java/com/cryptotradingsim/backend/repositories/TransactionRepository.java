@@ -25,19 +25,50 @@ public class TransactionRepository {
             rs.getDouble("quantity"),
             rs.getDouble("total"),
             rs.getString("type"),
-            rs.getTimestamp("timestamp")
+            rs.getTimestamp("timestamp"),
+            rs.getObject("profit_loss") != null ? rs.getBigDecimal("profit_loss") : null
     );
 
     //Get all transactions for a user
     public List<Transaction> getTransactionsByUserId(int userId) {
-        return jdbcTemplate.query("SELECT * FROM transactions WHERE user_id = ?", transactionRowMapper, userId);
+        return jdbcTemplate.query(
+                "SELECT * FROM transactions WHERE user_id = ? ORDER BY timestamp ASC, id ASC",
+                transactionRowMapper,
+                userId
+        );
+
     }
 
-    //Add a new transaction
-    public void addTransaction(int userId, String cryptoName, String symbol, double price, double quantity, double total, String type) {
+    //Add a new transaction with profitLoss
+    public void addTransaction(int userId, String cryptoName, String symbol, double price, double quantity, double total, String type, Double profitLoss) {
         jdbcTemplate.update(
-                "INSERT INTO transactions (user_id, crypto_name, symbol, price, quantity, total, type, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())",
-                userId, cryptoName, symbol, price, quantity, total, type
+                "INSERT INTO transactions (user_id, crypto_name, symbol, price, quantity, total, type, timestamp, profit_loss) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?)",
+                userId, cryptoName, symbol, price, quantity, total, type, profitLoss
         );
     }
+
+    //Get all BUY transactions by user and symbol
+    public List<Transaction> getBuyTransactionsByUserAndSymbol(int userId, String symbol) {
+        return jdbcTemplate.query(
+                "SELECT * FROM transactions WHERE user_id = ? AND symbol = ? AND type = 'BUY'",
+                transactionRowMapper,
+                userId, symbol
+        );
+    }
+
+    //Return all SELL transactions for a specific user and symbol
+    public List<Transaction> getSellTransactionsByUserAndSymbol(int userId, String symbol) {
+        return jdbcTemplate.query(
+                "SELECT * FROM transactions WHERE user_id = ? AND symbol = ? AND type = 'SELL' ORDER BY timestamp ASC",
+                transactionRowMapper,
+                userId,
+                symbol
+        );
+    }
+
+    public void clearAllTransactionsForUser(int userId) {
+        jdbcTemplate.update("DELETE FROM transactions WHERE user_id = ?", userId);
+    }
+
 }

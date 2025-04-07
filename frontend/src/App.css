@@ -1,30 +1,249 @@
 body {
     font-family: Arial, sans-serif;
     padding: 2rem;
-    background: #f5f5f5;
+    background-color: #1e1e1e
+}
+  
+h1 {
+  color: #d1c6b1; 
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+}
+  
+h2 {
+  color: #d1c6b1;
+  font-family: 'Verdana', sans-serif;
+}
+h3 {
+  color: #dcdcdc;
+  font-family: 'Verdana', sans-serif;
+}
+
+
+.nav-pane {
+  background-color: #444B54; 
+  padding: 1rem 20rem; /* Padding around the heading */
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  box-sizing: border-box; 
+  z-index: 100; /*stays on top */
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  height: auto; 
+  
+}
+
+
+td.profit {
+  font-weight: bold;
+}
+  
+td.profit.positive {
+  color: green;
+}
+  
+td.profit.negative {
+  color: red;
+}
+
+.user-info-container {
+  background-color: #dcdcdc; 
+  border: 5px solid #444B54;/*#b9a989; dark beige*/
+  padding: 1rem;
+  border-radius: 12px; /*rounded corners */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 7rem;
+  margin-bottom: 2rem;
+  max-width: 300px; 
+
+}
+  
+.user-info-item h2 {
+  font-size: 1.2rem;
+  margin: 0;
+  color: #2c2f34;
+  font-family: 'Verdana', sans-serif;
+    
+}
+
+.user-info-item-heading h2 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  color: #2c2f34;
+  font-family: 'Verdana', sans-serif;
+  text-align: center;
+  border-bottom: 3px solid black;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+  
+.user-info-item span {
+    
+  color: #2c2f34; 
+  font-family: 'Verdana', sans-serif;
+  font-size: 1rem;
+    
+}
+
+/*
+.crypto-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #f9f6f1; 
+  border: 1px solid #b9a989; 
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.crypto-table th, .crypto-table td {
+  padding: 12px 16px;
+  text-align: left;
+}
+  
+.crypto-table thead {
+  background-color: #d1c6b1; 
+  border-bottom: 2px solid #b9a989;
+}
+  
+.crypto-table tbody tr:nth-child(even) {
+  background-color: #f1ece4;
+}
+  
+.crypto-table tbody tr:hover {
+  background-color: #e0d7c8;
+  transition: background-color 0.2s ease;
+}
+*/
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #f9f9f9;
+  border: 1px solid #c1c1c1;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   }
   
-  h1, h2 {
-    color: #333;
-  }
+.transaction-table th,
+.transaction-table td {
+  padding: 12px 14px;
+  text-align: left;
+}
   
-  table {
-    width: 70%;
-    border-collapse: collapse;
-    background: white;
-  }
+.transaction-table thead {
+  background: linear-gradient(90deg, #38b2ac, #4299e1); 
+  color: white;
+  font-weight: 600;
+}
   
-  table, th, td {
-    border: 1px solid #ccc;
-  }
+.transaction-table tbody tr:nth-child(even) {
+  background-color: #f3f4f6;
+}
   
-  th, td {
-    padding: 0.75rem;
-    text-align: center;
-  }
+.transaction-table tbody tr:hover {
+  background-color: #e2e8f0;
+  transition: background-color 0.2s ease;
+}
   
-  th {
-    background-color: #007bff;
-    color: white;
+.transaction-table td.profit.positive {
+  color: #38a169; 
+  font-weight: bold;
+}
+  
+  .transaction-table td.profit.negative {
+    color: #e53e3e; 
+    font-weight: bold;
   }
+
+/*Buy and Sell Forms */
+.crypto-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.crypto-form input,
+.crypto-form button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #b9a989; 
+  border-radius: 8px;
+  background-color: #f9f9f9; 
+  color: #2c2f34; 
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/*input focus effect*/
+.crypto-form input:focus {
+  border-color: #38b2ac; 
+  outline: none;
+  background-color: #e0f7fa; 
+}
+
+/*button style */
+.crypto-form button {
+  background-color: #38b2ac; 
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+
+}
+
+.crypto-form button:hover {
+  background-color: #4299e1; 
+}
+
+.crypto-form button:active {
+  background-color: #2c7a7b; 
+}
+
+
+.crypto-form button[type="submit"] {
+  width: 100%;
+  align-self: flex-end;
+}
+
+
+.reset-account {
+  background-color: #e53e3e; 
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin-top: rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #b9a989; 
+  border-radius: 8px;
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+
+button.reset-account:hover {
+  background-color: #c53030; 
+}
+
+button.reset-account:active {
+  background-color: #9b2c2c; 
+}
+
+button.reset-account[type="button"] {
+  width: 100%;
+  align-self: center; 
+}
+
+  
+
+  
   

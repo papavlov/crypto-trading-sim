@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    balance NUMERIC NOT NULL DEFAULT 10000.00
+);
+CREATE TABLE IF NOT EXISTS transactions (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    crypto_name VARCHAR(255) NOT NULL,
+    symbol VARCHAR(10) NOT NULL,
+    price DOUBLE PRECISION NOT NULL,
+    quantity DOUBLE PRECISION NOT NULL,
+    total DOUBLE PRECISION NOT NULL,
+    type VARCHAR(4) CHECK (type IN ('BUY', 'SELL')) NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+ALTER TABLE transactions
+ADD COLUMN profit_loss DECIMAL(10, 2);
