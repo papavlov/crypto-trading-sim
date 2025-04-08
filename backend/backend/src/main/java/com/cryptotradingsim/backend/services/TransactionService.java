@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TransactionService {
@@ -90,6 +92,24 @@ public class TransactionService {
                 type.toUpperCase(),
                 profitLoss != null ? profitLoss.setScale(2, RoundingMode.HALF_UP).doubleValue() : null
         );
+    }
+
+    public Map<String, Double> getUserHoldings(int userId) {
+        List<Transaction> transactions = transactionRepository.getTransactionsByUserId(userId);
+        Map<String, Double> holdings = new HashMap<>();
+
+        for (Transaction transaction : transactions) {
+            String cryptoSymbol = transaction.getSymbol();
+            double quantity = transaction.getQuantity();
+
+            if ("BUY".equals(transaction.getType())) {
+                holdings.put(cryptoSymbol, holdings.getOrDefault(cryptoSymbol, 0.0) + quantity);
+            } else if ("SELL".equals(transaction.getType())) {
+                holdings.put(cryptoSymbol, holdings.getOrDefault(cryptoSymbol, 0.0) - quantity);
+            }
+        }
+
+        return holdings;
     }
 
 }

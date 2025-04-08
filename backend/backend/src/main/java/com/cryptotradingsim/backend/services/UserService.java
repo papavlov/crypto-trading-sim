@@ -50,5 +50,7 @@ public class UserService {
         double newBalance = user.getBalance() + gain;
         userRepository.updateBalance(userId, newBalance);
     }
+
+
 }
 
