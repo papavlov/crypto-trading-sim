@@ -67,6 +67,8 @@ public class TransactionRepository {
         );
     }
 
+    //deletes transactions and holdings
+
     public void clearAllTransactionsForUser(int userId) {
         jdbcTemplate.update("DELETE FROM transactions WHERE user_id = ?", userId);
     }

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -23,4 +24,10 @@ public class TransactionController {
         List<Transaction> transactions = transactionService.getTransactionsByUserId(userId);
         return ResponseEntity.ok(transactions);
     }
+    @GetMapping("{userId}/holdings")
+    public ResponseEntity<Map<String, Double>> getUserHoldings(@PathVariable int userId) {
+        return ResponseEntity.ok(transactionService.getUserHoldings(userId));
+    }
+
+
 }

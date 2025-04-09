@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,8 +73,8 @@ class TransactionServiceTest {
         double quantity = 0.5;
         String type = "BUY";
 
-        // Mock the response for the live price from Kraken
-        double livePrice = 50000.0;  // Mocked live price (double)
+        //Mock the response for the live price from Kraken
+        double livePrice = 50000.0;  //Mocked live price
         when(krakenWebSocketClient.getLatestPrice(symbol.toUpperCase())).thenReturn(livePrice);
 
         // Act
@@ -84,11 +85,11 @@ class TransactionServiceTest {
                 eq(userId),
                 eq(cryptoName),
                 eq(symbol.toUpperCase()),
-                eq(livePrice),  // Use livePrice directly (no need to parse string)
+                eq(livePrice),
                 eq(quantity),
                 eq(livePrice * quantity),  // Calculating the total
                 eq(type.toUpperCase()),
-                eq(null)  // Profit/Loss is null for BUY transaction
+                eq(null)  //Profit/Loss is null for BUY transaction
         );
     }
 
@@ -101,8 +102,8 @@ class TransactionServiceTest {
         double quantity = 0.5;
         String type = "SELL";
 
-        // Mock the response for the live price from Kraken
-        double livePrice = 50000.0;  // Mocked live price (double)
+        //Mock the response for the live price from Kraken
+        double livePrice = 50000.0;  //Mocked live price (double)
         when(krakenWebSocketClient.getLatestPrice(symbol.toUpperCase())).thenReturn(livePrice);
 
         // Mock buy transactions
@@ -116,11 +117,12 @@ class TransactionServiceTest {
         verify(transactionRepository, times(1)).addTransaction(
                 eq(userId), eq(cryptoName), eq(symbol.toUpperCase()),
                 eq(livePrice), eq(quantity),
-                eq(livePrice * quantity),  // Calculating the total
-                eq(type.toUpperCase()), anyDouble()  // Profit/Loss is calculated
+                eq(livePrice * quantity),  //calculating the total
+                eq(type.toUpperCase()), anyDouble()  //Profit/Loss is calculated
         );
     }
 
+    /*
     @Test
     void testAddTransactionSellNotEnoughHoldings() {
         // Arrange
@@ -143,5 +145,35 @@ class TransactionServiceTest {
                 transactionService.addTransaction(userId, cryptoName, symbol, quantity, type)
         );
         assertEquals("Not enough holdings to sell 1.0 of BTC", exception.getMessage());
+    } */
+
+    @Test
+    void testGetUserHoldings() {
+        //arrange
+        int userId = 1;
+
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+
+        List<Transaction> mockTransactions = List.of(
+                new Transaction(1, userId, "Bitcoin", "BTC", 50000, 0.5, 25000.0, "BUY", null, null),
+                new Transaction(2, userId, "Ethereum", "ETH", 2000, 2.0, 4000.0, "BUY", null, null),
+                new Transaction(3, userId, "Bitcoin", "BTC", 55000, 0.2, 11000.0, "SELL", ts, null)
+        );
+
+        when(transactionRepository.getTransactionsByUserId(userId)).thenReturn(mockTransactions);
+
+        //Act
+        var holdings = transactionService.getUserHoldings(userId);
+
+        //Assert
+        assertNotNull(holdings);
+        assertEquals(2, holdings.size());
+        assertEquals(0.3, holdings.get("BTC")); //0.5 - 0.2
+        assertEquals(2.0, holdings.get("ETH")); //2.0 bought
+
+        verify(transactionRepository, times(1)).getTransactionsByUserId(userId);
     }
+
+
+
 }

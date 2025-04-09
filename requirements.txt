@@ -1,0 +1,12 @@
+Requirements:
+
+Java 17
+Maven 3.8+
+Spring Boot 3.x
+PostgreSQL 15+
+Kraken WebSocket API access
+
+Frontend:
+Node.js 18+
+npm 9+
+React 18+

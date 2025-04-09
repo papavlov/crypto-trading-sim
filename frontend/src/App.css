@@ -51,7 +51,7 @@ td.profit.negative {
 
 .user-info-container {
   background-color: #dcdcdc; 
-  border: 5px solid #444B54;/*#b9a989; dark beige*/
+  border: 5px solid #444B54;
   padding: 1rem;
   border-radius: 12px; /*rounded corners */
   display: flex;
@@ -89,37 +89,6 @@ td.profit.negative {
   font-size: 1rem;
     
 }
-
-/*
-.crypto-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  background-color: #f9f6f1; 
-  border: 1px solid #b9a989; 
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-.crypto-table th, .crypto-table td {
-  padding: 12px 16px;
-  text-align: left;
-}
-  
-.crypto-table thead {
-  background-color: #d1c6b1; 
-  border-bottom: 2px solid #b9a989;
-}
-  
-.crypto-table tbody tr:nth-child(even) {
-  background-color: #f1ece4;
-}
-  
-.crypto-table tbody tr:hover {
-  background-color: #e0d7c8;
-  transition: background-color 0.2s ease;
-}
-*/
 .transaction-table {
   width: 100%;
   border-collapse: collapse;

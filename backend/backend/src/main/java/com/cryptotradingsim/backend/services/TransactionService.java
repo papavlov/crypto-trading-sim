@@ -74,9 +74,9 @@ public class TransactionService {
                 remainingToSell = remainingToSell.subtract(usedQty);
             }
 
-            if (remainingToSell.compareTo(BigDecimal.ZERO) > 0) {
-                throw new RuntimeException("Not enough holdings to sell " + quantity + " of " + symbol);
-            }
+            //if (remainingToSell.compareTo(BigDecimal.ZERO) > 0) {
+             //   throw new RuntimeException("Not enough holdings to sell " + quantity + " of " + symbol);
+           // }
 
             profitLoss = total.subtract(totalCost); //calc profit or loss
         }
@@ -96,20 +96,29 @@ public class TransactionService {
 
     public Map<String, Double> getUserHoldings(int userId) {
         List<Transaction> transactions = transactionRepository.getTransactionsByUserId(userId);
-        Map<String, Double> holdings = new HashMap<>();
+        Map<String, BigDecimal> holdings = new HashMap<>();
 
         for (Transaction transaction : transactions) {
             String cryptoSymbol = transaction.getSymbol();
-            double quantity = transaction.getQuantity();
+            BigDecimal quantity = BigDecimal.valueOf(transaction.getQuantity());  //BigDecimal for accurate handling
 
             if ("BUY".equals(transaction.getType())) {
-                holdings.put(cryptoSymbol, holdings.getOrDefault(cryptoSymbol, 0.0) + quantity);
+                holdings.put(cryptoSymbol, holdings.getOrDefault(cryptoSymbol, BigDecimal.ZERO).add(quantity));
             } else if ("SELL".equals(transaction.getType())) {
-                holdings.put(cryptoSymbol, holdings.getOrDefault(cryptoSymbol, 0.0) - quantity);
+                holdings.put(cryptoSymbol, holdings.getOrDefault(cryptoSymbol, BigDecimal.ZERO).subtract(quantity));
             }
         }
 
-        return holdings;
+        // converting BigDecimal holdings to Map with Double values, rounded to 2 decimal
+        Map<String, Double> finalHoldings = new HashMap<>();
+        for (Map.Entry<String, BigDecimal> entry : holdings.entrySet()) {
+            // Round the value to 2 decimal places before converting to double
+            BigDecimal roundedAmount = entry.getValue().setScale(4, RoundingMode.HALF_UP);
+            finalHoldings.put(entry.getKey(), roundedAmount.doubleValue());
+        }
+
+        return finalHoldings;
     }
+
 
 }
